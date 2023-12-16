@@ -1,0 +1,32 @@
+import requests
+
+def hava_durumu(api_key, sehir):
+    try:
+        url = f'http://api.openweathermap.org/data/2.5/weather?q={sehir}&appid={api_key}&units=metric'
+        response = requests.get(url)
+        response.raise_for_status()  # İstek başarısız olursa hemen hata fırlat
+
+        data = response.json()
+
+        main = data['main']
+        temperature = main['temp']
+        description = data['weather'][0]['description']
+
+        print(f"{sehir} Şehrindeki Hava Durumu:")
+        print(f"Sıcaklık: {temperature}°C")
+        print(f"Açıklama: {description}")
+
+    except requests.exceptions.HTTPError as errh:
+        print(f"Hata oluştu: HTTP Error - {errh}")
+    except requests.exceptions.ConnectionError as errc:
+        print(f"Hata oluştu: Connection Error - {errc}")
+    except requests.exceptions.Timeout as errt:
+        print(f"Hata oluştu: Timeout Error - {errt}")
+    except requests.exceptions.RequestException as err:
+        print(f"Hata oluştu: {err}")
+
+if __name__ == "__main__":
+    api_key = "4ace32935a27d46f5600aad345f83e3f"  # OpenWeatherMap API anahtarınızı buraya ekleyin
+    sehir = input("Hangi şehirdeki hava durumunu öğrenmek istersiniz? ")
+
+    hava_durumu(api_key, sehir)
